@@ -1,0 +1,7 @@
+#Wed Feb 01 14:56:16 EST 2017
+base.0=C\:\\temp\\android_studio_projects\\criminalIntent\\16_CameraIntent\\CriminalIntent\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run_29cb7c02dfee03738750653475e8a7078af7e28d
+renamed.1=classes2.dex
+renamed.0=classes.dex
+file.1=C\:\\temp\\android_studio_projects\\criminalIntent\\16_CameraIntent\\CriminalIntent\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run-bootstrap_ea3c02697f698331bcce70b2a93d3a67d1e0ef7e\\classes.dex
+base.1=C\:\\temp\\android_studio_projects\\criminalIntent\\16_CameraIntent\\CriminalIntent\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run-bootstrap_ea3c02697f698331bcce70b2a93d3a67d1e0ef7e
+file.0=C\:\\temp\\android_studio_projects\\criminalIntent\\16_CameraIntent\\CriminalIntent\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run_29cb7c02dfee03738750653475e8a7078af7e28d\\classes.dex

@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "C:\\temp\\android_studio_projects\\criminalIntent\\16_CameraIntent\\CriminalIntent\\app\\build\\intermediates\\res\\merged\\debug\\menu\\fragment_crime_list.xml",
+        "source": "C:\\temp\\android_studio_projects\\criminalIntent\\16_CameraIntent\\CriminalIntent\\app\\src\\main\\res\\menu\\fragment_crime_list.xml"
+    },
+    {
+        "merged": "C:\\temp\\android_studio_projects\\criminalIntent\\16_CameraIntent\\CriminalIntent\\app\\build\\intermediates\\res\\merged\\debug\\menu\\crime.xml",
+        "source": "C:\\temp\\android_studio_projects\\criminalIntent\\16_CameraIntent\\CriminalIntent\\app\\src\\main\\res\\menu\\crime.xml"
+    }
+]
