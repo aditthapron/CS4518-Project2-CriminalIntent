@@ -61,11 +61,10 @@
         android:text="Display Gallery For This Crime" />
 
     <CheckBox
-        android:id="@+id/face_detect"
-        android:layout_width="match_parent"
+        android:id="@+id/chkBox"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:text="Enable Face Detection" />
+        android:text="face detection"
+        android:checked="false" />
 
 </LinearLayout>

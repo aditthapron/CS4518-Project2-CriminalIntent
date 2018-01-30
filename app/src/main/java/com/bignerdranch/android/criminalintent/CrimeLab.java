@@ -8,7 +8,6 @@ import android.os.Environment;
 
 import com.bignerdranch.android.criminalintent.database.CrimeBaseHelper;
 import com.bignerdranch.android.criminalintent.database.CrimeCursorWrapper;
-
 import com.bignerdranch.android.criminalintent.database.CrimeDbSchema.CrimeTable;
 
 import java.io.File;
@@ -75,8 +74,6 @@ public class CrimeLab {
         }
     }
 
-
-
     public File getPhotoFile(Crime crime) {
         File externalFilesDir = mContext
                 .getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -87,7 +84,6 @@ public class CrimeLab {
 
         return new File(externalFilesDir, crime.getPhotoFilename());
     }
-
 
     public void updateCrime(Crime crime) {
         String uuidString = crime.getId().toString();

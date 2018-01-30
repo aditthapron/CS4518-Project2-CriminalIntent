@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +27,16 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.bignerdranch.android.criminalintent.patch.SafeFaceDetector;
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.face.Face;
+import com.google.android.gms.vision.face.FaceDetector;
+
 import java.io.File;
 import java.util.Date;
 import java.util.UUID;
+
 
 public class CrimeFragment extends Fragment {
 
@@ -47,10 +55,10 @@ public class CrimeFragment extends Fragment {
     private Button mReportButton;
     private Button mSuspectButton;
     private ImageButton mPhotoButton;
-    private ImageView mPhotoView;
-    private Button mGalleryButton;
 
-
+    private FaceView mOverlay;
+    private CheckBox chkBox;
+    private boolean faceDetectionOn;
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_CRIME_ID, crimeId);
@@ -80,6 +88,7 @@ public class CrimeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_crime, container, false);
+        mOverlay = (FaceView) v.findViewById(R.id.faceView);
 
         mTitleField = (EditText) v.findViewById(R.id.crime_title);
         mTitleField.setText(mCrime.getTitle());
@@ -99,6 +108,18 @@ public class CrimeFragment extends Fragment {
 
             }
         });
+
+        //face detection checkbox
+        chkBox = (CheckBox) v.findViewById(R.id.chkBox);
+        chkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                faceDetectionOn = isChecked;
+                updatePhotoView();
+
+            }
+        });
+
 
         mDateButton = (Button) v.findViewById(R.id.crime_date);
         updateDate();
@@ -174,18 +195,8 @@ public class CrimeFragment extends Fragment {
             }
         });
 
-        mPhotoView = (ImageView) v.findViewById(R.id.crime_photo);
+
         updatePhotoView();
-
-        mGalleryButton = (Button) v.findViewById(R.id.crime_gallery);
-
-        mGalleryButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent i = new Intent(getActivity(), CrimeGallery.class);
-                i.putExtra("crimeId", mCrime.getId());
-                startActivity(i);
-            }
-        });
 
         return v;
     }
@@ -197,8 +208,7 @@ public class CrimeFragment extends Fragment {
         }
 
         if (requestCode == REQUEST_DATE) {
-            Date date = (Date) data
-                    .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);
             updateDate();
         } else if (requestCode == REQUEST_CONTACT && data != null) {
@@ -261,11 +271,56 @@ public class CrimeFragment extends Fragment {
 
     private void updatePhotoView() {
         if (mPhotoFile == null || !mPhotoFile.exists()) {
-            mPhotoView.setImageDrawable(null);
+
         } else {
             Bitmap bitmap = PictureUtils.getScaledBitmap(
                     mPhotoFile.getPath(), getActivity());
-            mPhotoView.setImageBitmap(bitmap);
+
+            faceDetection(bitmap);
+
         }
+
+    }
+
+        private void faceDetection(Bitmap bitmap) {
+        //InputStream stream = getResources().openRawResource(R.raw.face2);
+        //Bitmap bitmap = BitmapFactory.decodeStream(stream);
+
+        // A new face detector is created for detecting the face and its landmarks.
+        //
+        // Setting "tracking enabled" to false is recommended for detection with unrelated
+        // individual images (as opposed to video or a series of consecutively captured still
+        // images).  For detection on unrelated individual images, this will give a more accurate
+        // result.  For detection on consecutive images (e.g., live video), tracking gives a more
+        // accurate (and faster) result.
+        //
+        // By default, landmark detection is not enabled since it increases detection time.  We
+        // enable it here in order to visualize detected landmarks.
+
+        if(faceDetectionOn) {
+            FaceDetector detector = new FaceDetector.Builder(getActivity())
+                    .setTrackingEnabled(false)
+                    .build();
+
+            // This is a temporary workaround for a bug in the face detector with respect to operating
+            // on very small images.  This will be fixed in a future release.  But in the near term, use
+            // of the SafeFaceDetector class will patch the issue.
+            Detector<Face> safeDetector = new SafeFaceDetector(detector);
+
+            // Create a frame from the bitmap and run face detection on the frame.
+            Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+            SparseArray<Face> faces = safeDetector.detect(frame);
+
+
+            mOverlay.setContent(bitmap, faces);
+            safeDetector.release();
+        }
+        else {
+            SparseArray<Face> dummy = new SparseArray<Face>();
+            mOverlay.setContent(bitmap, dummy);
+        }
+        // Although detector may be used multiple times for different images, it should be released
+        // when it is no longer needed in order to free native resources.
+
     }
 }
